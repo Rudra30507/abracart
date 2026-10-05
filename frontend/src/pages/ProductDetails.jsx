@@ -214,14 +214,19 @@ const ProductDetails = () => {
                   {category}
                 </span>
 
-                {stock > 0 ? (
-                  <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>{stock} units left in stock</span>
+                {stock > 5 ? (
+                  <span className="text-xs font-bold text-[#007600] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80 inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#007600]"></span>
+                    <span>In Stock</span>
+                  </span>
+                ) : stock > 0 ? (
+                  <span className="text-xs font-bold text-[#B12704] bg-amber-50 px-3 py-1 rounded-full border border-amber-200 inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#B12704] animate-pulse"></span>
+                    <span>Only {stock} left in stock - order soon.</span>
                   </span>
                 ) : (
-                  <span className="text-xs font-bold text-rose-800 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
-                    Currently Out of Stock
+                  <span className="text-xs font-bold text-[#B12704] bg-rose-50 px-3 py-1 rounded-full border border-rose-200 inline-flex items-center gap-1.5">
+                    <span>Currently unavailable.</span>
                   </span>
                 )}
               </div>
@@ -327,7 +332,7 @@ const ProductDetails = () => {
                     ? inCartItem
                       ? `Add More to Cart (${currentInCartQty} in cart)`
                       : 'Add to Cart'
-                    : 'Out of Stock'}
+                    : 'Currently unavailable'}
                 </span>
               </button>
             </div>

@@ -87,11 +87,23 @@ const CartItem = ({ item }) => {
               ₹{Number(price).toLocaleString('en-IN')} each
             </div>
 
-            {/* Stock indicator */}
-            {stock !== undefined && stock <= 5 && (
-              <span className="inline-block text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
-                Only {stock} left in stock
-              </span>
+            {/* Amazon-style Stock indicator */}
+            {stock !== undefined && (
+              <div>
+                {stock <= 0 ? (
+                  <span className="text-[11px] font-bold text-[#B12704]">
+                    Currently unavailable
+                  </span>
+                ) : stock <= 5 ? (
+                  <span className="text-[11px] font-bold text-[#B12704]">
+                    Only {stock} left in stock - order soon.
+                  </span>
+                ) : (
+                  <span className="text-[11px] font-bold text-[#007600]">
+                    In Stock
+                  </span>
+                )}
+              </div>
             )}
 
             {itemError && (

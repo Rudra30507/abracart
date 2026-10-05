@@ -176,12 +176,20 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
               </span>
             </div>
             
-            {/* Stock status */}
-            <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-              stock > 0 ? 'text-[#16806A] bg-[#E3F6EF]' : 'text-rose-700 bg-rose-50'
-            }`}>
-              {stock > 0 ? `${stock} units left` : 'Out of stock'}
-            </span>
+            {/* Amazon-style Stock Status */}
+            {stock > 5 ? (
+              <span className="text-[11px] font-bold text-[#007600] bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md">
+                In Stock
+              </span>
+            ) : stock > 0 ? (
+              <span className="text-[11px] font-bold text-[#B12704] bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                Only {stock} left in stock - order soon
+              </span>
+            ) : (
+              <span className="text-[11px] font-bold text-[#B12704] bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">
+                Currently unavailable
+              </span>
+            )}
           </div>
 
           {/* Action Feedback Messages */}
@@ -205,7 +213,7 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
             </div>
           )}
 
-          {/* Action Buttons: [ View Details ] and [ Add to Cart ] (Task 7) */}
+          {/* Action Buttons: [ View Details ] and [ Add to Cart ] */}
           <div className="grid grid-cols-2 gap-2">
             <Link
               to={`/products/${_id}`}
@@ -221,7 +229,7 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
               disabled={addingToCart || stock <= 0}
               className={`py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1 active:scale-[0.98] cursor-pointer shadow-xs ${
                 stock <= 0
-                  ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'
+                  ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed text-[11px]'
                   : isInCart
                   ? 'bg-[#E3F6EF] text-[#16806A] border border-[#16806A]/30 hover:bg-[#16806A] hover:text-white'
                   : 'bg-[#16806A] hover:bg-[#126A57] text-white'
@@ -230,7 +238,7 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
               {addingToCart ? (
                 <span>Adding...</span>
               ) : stock <= 0 ? (
-                <span>Out of Stock</span>
+                <span>Unavailable</span>
               ) : isInCart ? (
                 <span>Add Another</span>
               ) : (

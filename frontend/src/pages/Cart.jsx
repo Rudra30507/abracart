@@ -186,12 +186,12 @@ const Cart = ({ user }) => {
                 </div>
               </div>
 
-              {/* Proceed to Checkout Action (Task 13 / Prep for Lab 06) */}
+              {/* Proceed to Checkout Action */}
               <div className="pt-2">
                 <button
                   type="button"
                   id="checkout-btn"
-                  onClick={() => alert(`Order Subtotal: ₹${Number(subtotal).toLocaleString('en-IN')}. Checkout and Order creation flow is coming in Lab-06!`)}
+                  onClick={() => alert(`Proceeding to Checkout...\n\nOrder Subtotal: ₹${Number(subtotal).toLocaleString('en-IN')}\nDelivery: FREE Doorstep Delivery\nTotal Items: ${totalUnits} units\n\nThank you for shopping with abracart!`)}
                   className="w-full py-4 px-6 rounded-2xl text-white font-bold bg-[#16806A] hover:bg-[#126A57] active:scale-[0.99] transition-all shadow-md shadow-[#16806A]/20 flex items-center justify-center gap-2 cursor-pointer text-sm sm:text-base"
                 >
                   <span>Proceed to Checkout</span>
