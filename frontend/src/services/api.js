@@ -69,4 +69,29 @@ export const toggleWishlistApi = async (productId) => {
   return response.data;
 };
 
+// Cart service functions (Lab 05)
+export const getCart = async () => {
+  const response = await api.get('/cart');
+  return response.data;
+};
+export const getCartApi = getCart;
+
+export const addToCart = async (productId) => {
+  const response = await api.post(`/cart/${productId}`);
+  return response.data;
+};
+export const addToCartApi = addToCart;
+
+export const updateCartQty = async (productId, quantity) => {
+  const response = await api.patch(`/cart/${productId}`, { quantity });
+  return response.data;
+};
+export const updateCartQtyApi = updateCartQty;
+
+export const removeFromCart = async (productId) => {
+  const response = await api.delete(`/cart/${productId}`);
+  return response.data;
+};
+export const removeFromCartApi = removeFromCart;
+
 export default api;

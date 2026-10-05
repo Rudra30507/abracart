@@ -6,6 +6,7 @@ const cors = require('cors');
 const customerRoutes = require('./routes/customer.routes');
 const productRoutes = require('./routes/product.routes');
 const wishlistRoutes = require('./routes/wishlist.routes');
+const cartRoutes = require('./routes/cart.routes');
 
 dotenv.config({ path: __dirname + '/.env' });
 dotenv.config();
@@ -36,6 +37,7 @@ connectDB();
 app.use('/customers', customerRoutes);
 app.use('/products', productRoutes);
 app.use('/wishlist', wishlistRoutes);
+app.use('/cart', cartRoutes);
 
 app.get('/', (req, res) => {
   res.send('ShopKart Authentication API');

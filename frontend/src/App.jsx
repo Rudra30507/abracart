@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetails from './pages/ProductDetails';
 import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
+import { CartProvider } from './context/CartContext';
 import { getProfile } from './services/api';
 
 function App() {
@@ -34,63 +36,71 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-[#F7FCFA] text-[#1F2E29]">
-        {/* Top Navigation Bar with Logo and Logout */}
-        <Navbar user={user} setUser={setUser} />
+      <CartProvider user={user}>
+        <div className="min-h-screen flex flex-col bg-[#F7FCFA] text-[#1F2E29]">
+          {/* Top Navigation Bar with Logo and Dynamic Cart Count */}
+          <Navbar user={user} setUser={setUser} />
 
-        {/* Main Routed Content */}
-        <main className="flex-1">
-          <Routes>
-            {/* Root Route: Redirect to /login or /home */}
-            <Route
-              path="/"
-              element={user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />}
-            />
+          {/* Main Routed Content */}
+          <main className="flex-1">
+            <Routes>
+              {/* Root Route: Redirect to /login or /home */}
+              <Route
+                path="/"
+                element={user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />}
+              />
 
-            {/* Login Route (Task 2) */}
-            <Route
-              path="/login"
-              element={user ? <Navigate to="/home" replace /> : <Login setUser={setUser} />}
-            />
+              {/* Login Route (Task 2) */}
+              <Route
+                path="/login"
+                element={user ? <Navigate to="/home" replace /> : <Login setUser={setUser} />}
+              />
 
-            {/* Register Route (Task 1) */}
-            <Route
-              path="/register"
-              element={user ? <Navigate to="/home" replace /> : <Register />}
-            />
+              {/* Register Route (Task 1) */}
+              <Route
+                path="/register"
+                element={user ? <Navigate to="/home" replace /> : <Register />}
+              />
 
-            {/* Protected Home Route (Task 3) */}
-            <Route
-              path="/home"
-              element={<Home user={user} setUser={setUser} />}
-            />
+              {/* Protected Home Route (Task 3) */}
+              <Route
+                path="/home"
+                element={<Home user={user} setUser={setUser} />}
+              />
 
-            {/* Product Catalog Route (Lab 03 Task 6) */}
-            <Route
-              path="/products"
-              element={<Products />}
-            />
+              {/* Product Catalog Route (Lab 03 Task 6) */}
+              <Route
+                path="/products"
+                element={<Products />}
+              />
 
-            {/* Single Product Details Route (Lab 03 Task 8) */}
-            <Route
-              path="/products/:id"
-              element={<ProductDetails />}
-            />
+              {/* Single Product Details Route (Lab 03 Task 8) */}
+              <Route
+                path="/products/:id"
+                element={<ProductDetails />}
+              />
 
-            {/* Wishlist Route (Lab 04 Task 6) */}
-            <Route
-              path="/wishlist"
-              element={<Wishlist user={user} />}
-            />
+              {/* Wishlist Route (Lab 04 Task 6) */}
+              <Route
+                path="/wishlist"
+                element={<Wishlist user={user} />}
+              />
 
-            {/* Fallback for undefined routes */}
-            <Route
-              path="*"
-              element={<Navigate to="/products" replace />}
-            />
-          </Routes>
-        </main>
-      </div>
+              {/* Cart Route (Lab 05 Task 8 & 13) */}
+              <Route
+                path="/cart"
+                element={<Cart user={user} />}
+              />
+
+              {/* Fallback for undefined routes */}
+              <Route
+                path="*"
+                element={<Navigate to="/products" replace />}
+              />
+            </Routes>
+          </main>
+        </div>
+      </CartProvider>
     </BrowserRouter>
   );
 }

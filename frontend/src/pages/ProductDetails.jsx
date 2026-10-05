@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 const getCategoryIcon = (category) => {
   switch (category?.toLowerCase()) {
@@ -20,12 +21,14 @@ const getCategoryIcon = (category) => {
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { cart, addToCart, updateQuantity } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [cartSuccess, setCartSuccess] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [cartNotice, setCartNotice] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -66,11 +69,47 @@ const ProductDetails = () => {
     };
   }, [id]);
 
-  const handleAddToCart = () => {
-    setCartSuccess(true);
-    setTimeout(() => {
-      setCartSuccess(false);
-    }, 2500);
+  const inCartItem = cart?.find((item) => (item.product?._id || item.product) === id);
+  const currentInCartQty = inCartItem ? inCartItem.quantity : 0;
+
+  const handleAddToCart = async () => {
+    if (addingToCart || !product || product.stock <= 0) return;
+
+    const targetQty = currentInCartQty + quantity;
+    if (targetQty > product.stock) {
+      setCartNotice(`Cannot add ${quantity} more. Stock limit (${product.stock}) reached.`);
+      setTimeout(() => setCartNotice(''), 3000);
+      return;
+    }
+
+    setAddingToCart(true);
+    setCartNotice('');
+
+    try {
+      if (!inCartItem) {
+        const res = await addToCart(id);
+        if (res.success && quantity > 1) {
+          await updateQuantity(id, quantity);
+        }
+        if (res.success) {
+          setCartNotice(`✓ ${quantity} item(s) added to your cart!`);
+        } else {
+          setCartNotice(res.message);
+        }
+      } else {
+        const res = await updateQuantity(id, targetQty);
+        if (res.success) {
+          setCartNotice(`✓ Added ${quantity} more to cart (Total in cart: ${targetQty})`);
+        } else {
+          setCartNotice(res.message);
+        }
+      }
+    } catch (err) {
+      setCartNotice('Unable to update cart.');
+    } finally {
+      setAddingToCart(false);
+      setTimeout(() => setCartNotice(''), 3500);
+    }
   };
 
   // Loading State
@@ -233,10 +272,14 @@ const ProductDetails = () => {
 
             {/* Actions: Quantity Selector & Add to Cart */}
             <div className="pt-6 border-t border-[#E8E2D8] space-y-4">
-              {cartSuccess && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-semibold flex items-center gap-2 animate-fadeIn">
-                  <span>✓</span>
-                  <span>{quantity} item(s) added to Cart! (Cart functionality coming in Lab-04)</span>
+              {cartNotice && (
+                <div className={`p-3 rounded-xl border text-xs sm:text-sm font-semibold flex items-center gap-2 animate-fadeIn ${
+                  cartNotice.includes('✓')
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-rose-50 border-rose-200 text-rose-800'
+                }`}>
+                  <span>{cartNotice.includes('✓') ? '✓' : '⚠️'}</span>
+                  <span>{cartNotice}</span>
                 </div>
               )}
 
@@ -247,7 +290,8 @@ const ProductDetails = () => {
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="px-3.5 py-1.5 text-sm font-black text-[#1F2E29] hover:bg-gray-200 transition-colors cursor-pointer"
+                    disabled={quantity <= 1 || addingToCart}
+                    className="px-3.5 py-1.5 text-sm font-black text-[#1F2E29] hover:bg-gray-200 disabled:opacity-40 transition-colors cursor-pointer"
                   >
                     -
                   </button>
@@ -257,7 +301,8 @@ const ProductDetails = () => {
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.min(stock || 10, q + 1))}
-                    className="px-3.5 py-1.5 text-sm font-black text-[#1F2E29] hover:bg-gray-200 transition-colors cursor-pointer"
+                    disabled={(stock !== undefined && quantity >= stock) || addingToCart}
+                    className="px-3.5 py-1.5 text-sm font-black text-[#1F2E29] hover:bg-gray-200 disabled:opacity-40 transition-colors cursor-pointer"
                   >
                     +
                   </button>
@@ -267,14 +312,23 @@ const ProductDetails = () => {
               {/* Add to Cart Button */}
               <button
                 type="button"
+                id="details-add-to-cart-btn"
                 onClick={handleAddToCart}
-                disabled={stock === 0}
+                disabled={stock === 0 || addingToCart}
                 className="w-full py-4 px-6 rounded-2xl text-white font-bold bg-[#16806A] hover:bg-[#126A57] active:scale-[0.99] transition-all duration-200 shadow-md shadow-[#16806A]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base cursor-pointer"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span>{stock > 0 ? 'Add to Cart' : 'Out of Stock'}</span>
+                <span>
+                  {addingToCart
+                    ? 'Adding to Cart…'
+                    : stock > 0
+                    ? inCartItem
+                      ? `Add More to Cart (${currentInCartQty} in cart)`
+                      : 'Add to Cart'
+                    : 'Out of Stock'}
+                </span>
               </button>
             </div>
 

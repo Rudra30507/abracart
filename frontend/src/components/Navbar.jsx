@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { logoutUser, getWishlist } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { totalUnits } = useCart();
 
   const isLogin = location.pathname === '/login' || location.pathname === '/';
   const isRegister = location.pathname === '/register';
   const isProducts = location.pathname === '/products' || location.pathname.startsWith('/products/');
   const isHome = location.pathname === '/home';
   const isWishlist = location.pathname === '/wishlist';
+  const isCart = location.pathname === '/cart';
 
   // Bonus: Wishlist Count (+5 Marks) fetched dynamically from backend
   const [wishlistCount, setWishlistCount] = useState(null);
@@ -109,6 +112,27 @@ const Navbar = ({ user, setUser }) => {
                 </span>
               )}
             </Link>
+
+            {/* Task 16: Dynamic Cart Link with derived count */}
+            <Link
+              to="/cart"
+              id="navbar-cart-link"
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${
+                isCart
+                  ? 'bg-[#16806A] text-white shadow-xs'
+                  : 'text-[#1F2E29]/75 hover:text-[#16806A] hover:bg-[#FFFDF7]'
+              }`}
+            >
+              <span>Cart</span>
+              <span
+                id="navbar-cart-count"
+                className={`text-[11px] font-extrabold px-1.5 py-0.2 rounded-full ${
+                  isCart ? 'bg-white text-[#16806A]' : 'bg-[#16806A] text-white'
+                }`}
+              >
+                {totalUnits}
+              </span>
+            </Link>
           </nav>
         </div>
 
@@ -133,6 +157,15 @@ const Navbar = ({ user, setUser }) => {
             >
               <span>♡</span>
               {wishlistCount !== null && <span>({wishlistCount})</span>}
+            </Link>
+            <Link
+              to="/cart"
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
+                isCart ? 'bg-[#16806A] text-white' : 'text-[#1F2E29]/80 bg-[#E4F3ED]'
+              }`}
+            >
+              <span>🛒</span>
+              <span>({totalUnits})</span>
             </Link>
           </div>
 

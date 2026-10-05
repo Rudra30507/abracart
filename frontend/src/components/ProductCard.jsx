@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addToWishlist, removeFromWishlist } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 const getCategoryIcon = (category) => {
   switch (category?.toLowerCase()) {
@@ -19,6 +20,16 @@ const getCategoryIcon = (category) => {
 
 const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) => {
   const { _id, name, price, category, image, stock } = product;
+
+  // Global Cart State (Lab 05 Task 7)
+  const { cart, addToCart: addProductToCart } = useCart();
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [cartMsg, setCartMsg] = useState('');
+
+  const cartItem = cart?.find(
+    (item) => (item.product?._id || item.product) === _id
+  );
+  const isInCart = Boolean(cartItem);
 
   // Task 5: Wishlist Interaction States
   const [isWishlisted, setIsWishlisted] = useState(initialWishlisted);
@@ -67,6 +78,36 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
         setErrorMsg('');
       }, 3000);
     }
+  };
+
+  // Task 7: Add to Cart button click handler
+  const handleAddToCartClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (addingToCart || stock <= 0) return;
+
+    if (cartItem && stock !== undefined && cartItem.quantity >= stock) {
+      setCartMsg(`Max stock reached (${stock})`);
+      setTimeout(() => setCartMsg(''), 2500);
+      return;
+    }
+
+    setAddingToCart(true);
+    setCartMsg('');
+    const res = await addProductToCart(_id);
+    setAddingToCart(false);
+
+    if (res.success) {
+      setCartMsg(isInCart ? 'Added another unit!' : 'Added to cart!');
+    } else {
+      if (res.status === 401) {
+        setCartMsg('Please login to add items to cart');
+      } else {
+        setCartMsg(res.message);
+      }
+    }
+    setTimeout(() => setCartMsg(''), 2500);
   };
 
   return (
@@ -144,6 +185,15 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
           </div>
 
           {/* Action Feedback Messages */}
+          {cartMsg && (
+            <div className={`mb-2 p-2 text-[11px] font-medium rounded-lg animate-fadeIn text-center ${
+              cartMsg.includes('Added') || cartMsg.includes('✓')
+                ? 'text-emerald-800 bg-emerald-50 border border-emerald-200'
+                : 'text-amber-800 bg-amber-50 border border-amber-200'
+            }`}>
+              {cartMsg}
+            </div>
+          )}
           {errorMsg && (
             <div className="mb-2 p-2 text-[11px] font-medium text-rose-700 bg-rose-50 border border-rose-200 rounded-lg animate-fadeIn text-center">
               {errorMsg}
@@ -155,30 +205,36 @@ const ProductCard = ({ product, initialWishlisted = false, onWishlistChange }) =
             </div>
           )}
 
-          {/* Action Buttons: [ View Details ] and [ ♡ Wishlist ] */}
+          {/* Action Buttons: [ View Details ] and [ Add to Cart ] (Task 7) */}
           <div className="grid grid-cols-2 gap-2">
             <Link
               to={`/products/${_id}`}
-              className="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#16806A] hover:bg-[#126A57] text-white active:scale-[0.98] transition-all flex items-center justify-center gap-1 shadow-xs cursor-pointer text-center"
+              className="py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold border border-[#E8E2D8] hover:border-[#16806A] text-[#1F2E29] hover:text-[#16806A] bg-white active:scale-[0.98] transition-all flex items-center justify-center gap-1 shadow-xs cursor-pointer text-center"
             >
-              <span>View Details</span>
+              <span>Details</span>
             </Link>
 
             <button
-              onClick={handleWishlistToggle}
-              disabled={saving}
-              className={`py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center gap-1 active:scale-[0.98] cursor-pointer ${
-                isWishlisted
-                  ? 'bg-rose-50 text-rose-600 border-rose-300 hover:bg-rose-100'
-                  : 'bg-white text-[#1F2E29] border-[#E8E2D8] hover:border-[#16806A] hover:text-[#16806A]'
-              } ${saving ? 'opacity-70 cursor-wait' : ''}`}
+              type="button"
+              id={`add-to-cart-${_id}`}
+              onClick={handleAddToCartClick}
+              disabled={addingToCart || stock <= 0}
+              className={`py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1 active:scale-[0.98] cursor-pointer shadow-xs ${
+                stock <= 0
+                  ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'
+                  : isInCart
+                  ? 'bg-[#E3F6EF] text-[#16806A] border border-[#16806A]/30 hover:bg-[#16806A] hover:text-white'
+                  : 'bg-[#16806A] hover:bg-[#126A57] text-white'
+              } ${addingToCart ? 'opacity-75 cursor-wait' : ''}`}
             >
-              {saving ? (
-                <span>⏳ Saving...</span>
-              ) : isWishlisted ? (
-                <span>♥ Saved</span>
+              {addingToCart ? (
+                <span>Adding...</span>
+              ) : stock <= 0 ? (
+                <span>Out of Stock</span>
+              ) : isInCart ? (
+                <span>Add Another</span>
               ) : (
-                <span>♡ Wishlist</span>
+                <span>Add to Cart</span>
               )}
             </button>
           </div>
