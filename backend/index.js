@@ -26,18 +26,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const mongoURI = process.env.MONGO_URI || process.env.url || 'mongodb://127.0.0.1:27017/shopkart';
+let isConnected = false;
 
 const connectDB = async () => {
-  try {
-    await mongoose.connect(mongoURI);
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error('MongoDB connection error:', err.message);
+  if (mongoose.connection.readyState >= 1) {
+    return;
   }
+  const uri = process.env.MONGO_URI || process.env.url;
+  if (!uri) {
+    console.error('MONGO_URI is not defined in environment variables');
+    throw new Error('MONGO_URI environment variable is not defined on server');
+  }
+  await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 8000,
+  });
+  console.log('MongoDB connected successfully');
 };
 
-connectDB();
+// Middleware to ensure DB connection is active before any route executes
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('DB Middleware Error:', err.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Database connection failed: ' + err.message
+    });
+  }
+});
 
 app.use('/customers', customerRoutes);
 app.use('/products', productRoutes);
