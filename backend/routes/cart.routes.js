@@ -11,16 +11,16 @@ const {
 // All cart endpoints require an authenticated user session/JWT
 router.use(authMiddleware);
 
-// Task 2: POST /cart/:productId
+// Add product to cart
 router.post('/:productId', addToCart);
 
-// Task 3: GET /cart
+// Get current user cart
 router.get('/', getCart);
 
-// Task 4: PATCH /cart/:productId
+// Update item quantity
 router.patch('/:productId', updateCartQuantity);
 
-// Task 5: DELETE /cart/:productId
+// Remove item from cart
 router.delete('/:productId', removeFromCart);
 
 module.exports = router;

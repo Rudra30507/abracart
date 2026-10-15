@@ -43,7 +43,7 @@ const Register = () => {
       setLoading(true);
       setErrorMessage('');
 
-      // Call Register API (Task 1: POST /customers/register)
+      // Call Register API
       const res = await registerUser(formData);
 
       if (res.success) {
@@ -110,25 +110,25 @@ const Register = () => {
         </div>
       </div>
 
-      {/* RIGHT PANEL: 50% Seamless Panel (NO inner card) */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-14 lg:p-20 bg-[#FAF7F2]">
+      {/* RIGHT PANEL: 50% Seamless Panel */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-14 lg:p-20 bg-[#FAF7F2] dark:bg-[#0B0F14] transition-colors duration-300">
         <div className="w-full max-w-md">
 
           {/* Header */}
           <div className="mb-8">
             <img src="/logo.png" alt="abracart" className="h-10 w-auto mb-6" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1F2E29] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1F2E29] dark:text-white tracking-tight">
               Create Account
             </h1>
-            <p className="text-sm text-[#1F2E29]/70 mt-1.5 font-normal">
+            <p className="text-sm text-[#1F2E29]/70 dark:text-slate-400 mt-1.5 font-normal">
               Sign up with your details to access daily household shopping.
             </p>
           </div>
 
           {/* Success Banner */}
           {successMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2.5">
-              <svg className="w-5 h-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-300 text-sm flex items-center gap-2.5">
+              <svg className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
               <span className="font-semibold">{successMessage}</span>
@@ -137,8 +137,8 @@ const Register = () => {
 
           {/* Error Banner */}
           {errorMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5">
-              <svg className="w-5 h-5 shrink-0 text-rose-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-200 text-xs sm:text-sm flex items-start gap-2.5">
+              <svg className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div>
@@ -153,11 +153,11 @@ const Register = () => {
 
             {/* Full Name */}
             <div>
-              <label className="block text-xs font-bold text-[#1F2E29] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#1F2E29] dark:text-slate-200 uppercase tracking-wider mb-2">
                 Full Name
               </label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#16806A] transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-[#16806A] dark:group-focus-within:text-emerald-400 transition-colors">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -169,18 +169,18 @@ const Register = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Full Name"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] bg-white text-[#1F2E29] text-sm focus:border-[#16806A] focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 font-medium"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] dark:border-white/10 bg-white dark:bg-[#141C26] text-[#1F2E29] dark:text-white text-sm focus:border-[#16806A] dark:focus:border-emerald-400 focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-bold text-[#1F2E29] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#1F2E29] dark:text-slate-200 uppercase tracking-wider mb-2">
                 Email
               </label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#16806A] transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-[#16806A] dark:group-focus-within:text-emerald-400 transition-colors">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                   </svg>
@@ -192,7 +192,7 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Email"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] bg-white text-[#1F2E29] text-sm focus:border-[#16806A] focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 font-medium"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] dark:border-white/10 bg-white dark:bg-[#141C26] text-[#1F2E29] dark:text-white text-sm focus:border-[#16806A] dark:focus:border-emerald-400 focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium"
                 />
               </div>
             </div>
@@ -200,11 +200,11 @@ const Register = () => {
             {/* Password & Phone Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[#1F2E29] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#1F2E29] dark:text-slate-200 uppercase tracking-wider mb-2">
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#16806A] transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-[#16806A] dark:group-focus-within:text-emerald-400 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -216,12 +216,12 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Password"
-                    className="w-full pl-11 pr-10 py-3 rounded-xl border border-[#EDE7DE] bg-white text-[#1F2E29] text-sm focus:border-[#16806A] focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 font-medium"
+                    className="w-full pl-11 pr-10 py-3 rounded-xl border border-[#EDE7DE] dark:border-white/10 bg-white dark:bg-[#141C26] text-[#1F2E29] dark:text-white text-sm focus:border-[#16806A] dark:focus:border-emerald-400 focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#1F2E29] transition-colors cursor-pointer"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#1F2E29] dark:hover:text-white transition-colors cursor-pointer"
                   >
                     {showPassword ? (
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,12 +238,12 @@ const Register = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1F2E29] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#1F2E29] dark:text-slate-200 uppercase tracking-wider mb-2">
                   Phone Number
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#16806A] transition-colors">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-[#16806A] dark:group-focus-within:text-emerald-400 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
@@ -254,7 +254,7 @@ const Register = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Phone Number"
-                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] bg-white text-[#1F2E29] text-sm focus:border-[#16806A] focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 font-medium"
+                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#EDE7DE] dark:border-white/10 bg-white dark:bg-[#141C26] text-[#1F2E29] dark:text-white text-sm focus:border-[#16806A] dark:focus:border-emerald-400 focus:ring-4 focus:ring-[#16806A]/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium"
                   />
                 </div>
               </div>
@@ -264,7 +264,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 px-6 rounded-xl text-white font-bold bg-[#16806A] hover:bg-[#126A57] active:scale-[0.99] transition-all duration-200 shadow-md shadow-[#16806A]/20 disabled:opacity-60 flex items-center justify-center gap-2 text-base mt-4 cursor-pointer"
+              className="w-full py-4 px-6 rounded-xl text-white font-bold bg-[#16806A] hover:bg-[#126A57] dark:bg-emerald-600 dark:hover:bg-emerald-500 active:scale-[0.99] transition-all duration-200 shadow-lg shadow-[#16806A]/20 dark:shadow-emerald-950/40 disabled:opacity-60 flex items-center justify-center gap-2 text-base mt-4 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -281,12 +281,12 @@ const Register = () => {
           </form>
 
           {/* Switch to Login */}
-          <div className="mt-8 pt-6 border-t border-[#EDE7DE] text-center">
-            <p className="text-sm text-[#1F2E29]/70">
+          <div className="mt-8 pt-6 border-t border-[#EDE7DE] dark:border-white/10 text-center">
+            <p className="text-sm text-[#1F2E29]/70 dark:text-slate-400">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-bold text-[#16806A] hover:text-[#126A57] hover:underline"
+                className="font-bold text-[#16806A] dark:text-emerald-400 hover:text-[#126A57] dark:hover:text-emerald-300 hover:underline"
               >
                 Log In
               </Link>

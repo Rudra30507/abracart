@@ -1,4 +1,4 @@
-// Alias to customer.model.js for Lab 04 User Model requirements
+// Customer model alias export
 const Customer = require('./customer.model');
 
 module.exports = Customer;

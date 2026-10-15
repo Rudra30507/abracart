@@ -38,7 +38,7 @@ export const CartProvider = ({ children, user }) => {
     fetchCart();
   }, [fetchCart]);
 
-  // Derived Totals (Task 15: Not stored in DB, calculated from state)
+  // Derived Totals (calculated from current cart state)
   const totalUnits = useMemo(() => {
     return cart.reduce((total, item) => total + (Number(item.quantity) || 0), 0);
   }, [cart]);
@@ -53,7 +53,7 @@ export const CartProvider = ({ children, user }) => {
 
   const cartItemCount = cart.length;
 
-  // Task 2 & 7: Add to Cart Action
+  // Add to Cart
   const handleAddToCart = async (productId) => {
     try {
       setError(null);
@@ -70,7 +70,7 @@ export const CartProvider = ({ children, user }) => {
     }
   };
 
-  // Task 4 & 14: Update Quantity Action
+  // Update Quantity
   const handleUpdateQuantity = async (productId, newQuantity) => {
     try {
       setError(null);
@@ -87,7 +87,7 @@ export const CartProvider = ({ children, user }) => {
     }
   };
 
-  // Task 5: Remove from Cart Action
+  // Remove from Cart
   const handleRemoveFromCart = async (productId) => {
     try {
       setError(null);
@@ -106,6 +106,11 @@ export const CartProvider = ({ children, user }) => {
     }
   };
 
+  // Clear Cart action upon successful order payment
+  const handleClearCart = () => {
+    setCart([]);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -119,6 +124,7 @@ export const CartProvider = ({ children, user }) => {
         addToCart: handleAddToCart,
         updateQuantity: handleUpdateQuantity,
         removeFromCart: handleRemoveFromCart,
+        clearCart: handleClearCart,
         fetchCart
       }}
     >

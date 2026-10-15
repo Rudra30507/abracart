@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 
 const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
+  const { addToast } = useToast();
   const [updating, setUpdating] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [itemError, setItemError] = useState('');
@@ -44,14 +46,16 @@ const CartItem = ({ item }) => {
     const res = await removeFromCart(_id);
     setRemoving(false);
 
-    if (!res.success) {
+    if (res.success) {
+      addToast({ message: `Removed "${name}" from cart`, type: 'info' });
+    } else {
       setItemError(res.message);
       setTimeout(() => setItemError(''), 3000);
     }
   };
 
   return (
-    <div className={`p-4 sm:p-5 rounded-2xl bg-white border border-[#E8E2D8] hover:border-[#16806A]/30 shadow-xs transition-all ${
+    <div className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#141C26] border border-[#E8E2D8] dark:border-white/10 hover:border-[#16806A]/30 dark:hover:border-emerald-500/30 shadow-xs transition-all ${
       removing ? 'opacity-40 pointer-events-none' : ''
     }`}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -60,7 +64,7 @@ const CartItem = ({ item }) => {
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <Link
             to={`/products/${_id}`}
-            className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#F7F5F0] border border-[#E8E2D8] shrink-0 block"
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#F7F5F0] dark:bg-[#0E151E] border border-[#E8E2D8] dark:border-white/10 shrink-0 block"
           >
             <img
               src={image}
@@ -77,29 +81,29 @@ const CartItem = ({ item }) => {
           <div className="min-w-0 flex-1 space-y-1">
             <Link
               to={`/products/${_id}`}
-              className="text-sm sm:text-base font-bold text-[#1F2E29] hover:text-[#16806A] transition-colors truncate block"
+              className="text-sm sm:text-base font-bold text-[#1F2E29] dark:text-slate-100 hover:text-[#16806A] dark:hover:text-emerald-400 transition-colors truncate block"
               title={name}
             >
               {name}
             </Link>
             
-            <div className="text-xs sm:text-sm font-semibold text-[#1F2E29]/70">
+            <div className="text-xs sm:text-sm font-semibold text-[#1F2E29]/70 dark:text-slate-400">
               ₹{Number(price).toLocaleString('en-IN')} each
             </div>
 
-            {/* Amazon-style Stock indicator */}
+            {/* Stock indicator */}
             {stock !== undefined && (
               <div>
                 {stock <= 0 ? (
-                  <span className="text-[11px] font-bold text-[#B12704]">
+                  <span className="text-[11px] font-bold text-[#B12704] dark:text-rose-400">
                     Currently unavailable
                   </span>
                 ) : stock <= 5 ? (
-                  <span className="text-[11px] font-bold text-[#B12704]">
+                  <span className="text-[11px] font-bold text-[#B12704] dark:text-amber-400">
                     Only {stock} left in stock - order soon.
                   </span>
                 ) : (
-                  <span className="text-[11px] font-bold text-[#007600]">
+                  <span className="text-[11px] font-bold text-[#007600] dark:text-emerald-400">
                     In Stock
                   </span>
                 )}
@@ -107,7 +111,7 @@ const CartItem = ({ item }) => {
             )}
 
             {itemError && (
-              <div className="text-xs font-semibold text-rose-600 animate-fadeIn">
+              <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 animate-fadeIn">
                 ⚠️ {itemError}
               </div>
             )}
@@ -115,23 +119,23 @@ const CartItem = ({ item }) => {
         </div>
 
         {/* Right: Quantity Controls, Subtotal & Remove Button */}
-        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E8E2D8]">
+        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E8E2D8] dark:border-white/10">
           
           {/* Quantity Controls [-] Qty [+] */}
           <div className="flex items-center gap-2">
-            <div className="inline-flex items-center border border-[#E2DAD0] rounded-xl bg-[#FAF8F5] overflow-hidden shadow-xs">
+            <div className="inline-flex items-center border border-[#E2DAD0] dark:border-white/10 rounded-xl bg-[#FAF8F5] dark:bg-[#0E151E] overflow-hidden shadow-xs">
               <button
                 type="button"
                 id={`decrease-qty-${_id}`}
                 onClick={() => handleQuantityChange(quantity - 1)}
                 disabled={quantity <= 1 || updating || removing}
                 title={quantity <= 1 ? "Minimum quantity is 1 (use Remove to delete)" : "Decrease quantity"}
-                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-sm font-black text-[#1F2E29] hover:bg-[#E8E2D8]/60 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-sm font-black text-[#1F2E29] dark:text-slate-200 hover:bg-[#E8E2D8]/60 dark:hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer"
               >
                 -
               </button>
 
-              <span className="w-10 sm:w-11 text-center text-xs sm:text-sm font-extrabold text-[#1F2E29]">
+              <span className="w-10 sm:w-11 text-center text-xs sm:text-sm font-extrabold text-[#1F2E29] dark:text-slate-100">
                 {updating ? '…' : quantity}
               </span>
 
@@ -141,7 +145,7 @@ const CartItem = ({ item }) => {
                 onClick={() => handleQuantityChange(quantity + 1)}
                 disabled={(stock !== undefined && quantity >= stock) || updating || removing}
                 title={stock !== undefined && quantity >= stock ? `Max available stock (${stock}) reached` : "Increase quantity"}
-                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-sm font-black text-[#1F2E29] hover:bg-[#E8E2D8]/60 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-sm font-black text-[#1F2E29] dark:text-slate-200 hover:bg-[#E8E2D8]/60 dark:hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer"
               >
                 +
               </button>
@@ -150,7 +154,7 @@ const CartItem = ({ item }) => {
 
           {/* Item Subtotal (Derived) */}
           <div className="text-right">
-            <span className="text-base sm:text-lg font-black text-[#1F2E29]">
+            <span className="text-base sm:text-lg font-black text-[#1F2E29] dark:text-slate-100">
               ₹{Number(itemTotal).toLocaleString('en-IN')}
             </span>
           </div>
@@ -161,7 +165,7 @@ const CartItem = ({ item }) => {
             id={`remove-item-${_id}`}
             onClick={handleRemove}
             disabled={removing || updating}
-            className="text-xs font-bold text-rose-600 hover:text-rose-800 hover:underline transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
+            className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:underline transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
           >
             <span>{removing ? 'Removing…' : 'Remove'}</span>
           </button>

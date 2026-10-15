@@ -2,9 +2,10 @@ import axios from 'axios';
 
 
 const apiHost = typeof window !== 'undefined' && window.location.hostname === '127.0.0.1' ? '127.0.0.1' : 'localhost';
+const defaultBaseURL = `http://${apiHost}:1001`;
 
 const api = axios.create({
-  baseURL: `http://${apiHost}:1001`,
+  baseURL: import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || defaultBaseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -48,7 +49,7 @@ export const createProduct = async (productData) => {
   return response.data;
 };
 
-// Wishlist service functions (Lab 04)
+// Wishlist service functions
 export const addToWishlist = async (productId) => {
   const response = await api.post(`/wishlist/${productId}`);
   return response.data;
@@ -69,7 +70,7 @@ export const toggleWishlistApi = async (productId) => {
   return response.data;
 };
 
-// Cart service functions (Lab 05)
+// Cart service functions
 export const getCart = async () => {
   const response = await api.get('/cart');
   return response.data;
@@ -93,5 +94,36 @@ export const removeFromCart = async (productId) => {
   return response.data;
 };
 export const removeFromCartApi = removeFromCart;
+
+// Order & Payment service functions
+export const createPaymentOrder = async (shippingAddress) => {
+  const response = await api.post('/orders/create-payment-order', { shippingAddress });
+  return response.data;
+};
+export const createPaymentOrderApi = createPaymentOrder;
+
+export const verifyPayment = async (paymentData) => {
+  const response = await api.post('/orders/verify-payment', paymentData);
+  return response.data;
+};
+export const verifyPaymentApi = verifyPayment;
+
+export const getOrders = async () => {
+  const response = await api.get('/orders');
+  return response.data;
+};
+export const getOrdersApi = getOrders;
+
+export const getOrderById = async (orderId) => {
+  const response = await api.get(`/orders/${orderId}`);
+  return response.data;
+};
+export const getOrderByIdApi = getOrderById;
+
+export const updateOrderStatus = async (orderId, status) => {
+  const response = await api.patch(`/orders/${orderId}/status`, { status });
+  return response.data;
+};
+export const updateOrderStatusApi = updateOrderStatus;
 
 export default api;

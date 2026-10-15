@@ -71,11 +71,12 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6] pt-20 sm:pt-24 pb-16 px-4 sm:px-8">
+    <div className="min-h-screen bg-[#F9F8F6] dark:bg-[#0B0F14] pt-20 sm:pt-24 pb-16 px-4 sm:px-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-6">
 
         {/* Amazon / Flipkart Style Category Hero Banner */}
-        <div className="bg-gradient-to-r from-[#16806A] via-[#1B8E77] to-[#126A57] text-white rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+        <div className="bg-gradient-to-r from-[#16806A] via-[#1B8E77] to-[#126A57] dark:from-[#064E3B] dark:via-[#047857] dark:to-[#065F46] text-white rounded-3xl p-6 sm:p-8 shadow-sm dark:shadow-emerald-950/40 relative overflow-hidden">
+          <div className="absolute right-0 top-0 translate-x-12 -translate-y-8 w-72 h-72 bg-emerald-300/10 dark:bg-emerald-400/15 rounded-full blur-3xl pointer-events-none"></div>
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="max-w-xl">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/15 backdrop-blur-md border border-white/20 text-[#E3F6EF] mb-3">
@@ -117,7 +118,7 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Task 7: Search & Category Filter Section */}
+        {/* Search & Category Filter Section */}
         <SearchBar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}

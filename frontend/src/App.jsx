@@ -8,7 +8,13 @@ import Products from './pages/Products';
 import ProductDetails from './pages/ProductDetails';
 import Wishlist from './pages/Wishlist';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Orders from './pages/Orders';
+import OrderConfirmation from './pages/OrderConfirmation';
 import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './context/ToastContext';
 import { getProfile } from './services/api';
 
 function App() {
@@ -35,11 +41,14 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <CartProvider user={user}>
-        <div className="min-h-screen flex flex-col bg-[#F7FCFA] text-[#1F2E29]">
-          {/* Top Navigation Bar with Logo and Dynamic Cart Count */}
-          <Navbar user={user} setUser={setUser} />
+    <ThemeProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <CartProvider user={user}>
+            <WishlistProvider user={user}>
+              <div className="min-h-screen flex flex-col bg-[#F7FCFA] dark:bg-[#0B0F14] text-[#1F2E29] dark:text-[#F1F5F9] transition-colors duration-300">
+                {/* Top Navigation Bar with Logo, Cart Count & Theme Switcher */}
+                <Navbar user={user} setUser={setUser} />
 
           {/* Main Routed Content */}
           <main className="flex-1">
@@ -50,46 +59,68 @@ function App() {
                 element={user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />}
               />
 
-              {/* Login Route (Task 2) */}
+              {/* Login Route */}
               <Route
                 path="/login"
                 element={user ? <Navigate to="/home" replace /> : <Login setUser={setUser} />}
               />
 
-              {/* Register Route (Task 1) */}
+              {/* Register Route */}
               <Route
                 path="/register"
                 element={user ? <Navigate to="/home" replace /> : <Register />}
               />
 
-              {/* Protected Home Route (Task 3) */}
+              {/* Protected Home Route */}
               <Route
                 path="/home"
                 element={<Home user={user} setUser={setUser} />}
               />
 
-              {/* Product Catalog Route (Lab 03 Task 6) */}
+              {/* Product Catalog Route */}
               <Route
                 path="/products"
                 element={<Products />}
               />
 
-              {/* Single Product Details Route (Lab 03 Task 8) */}
+              {/* Single Product Details Route */}
               <Route
                 path="/products/:id"
                 element={<ProductDetails />}
               />
 
-              {/* Wishlist Route (Lab 04 Task 6) */}
+              {/* Wishlist Route */}
               <Route
                 path="/wishlist"
                 element={<Wishlist user={user} />}
               />
 
-              {/* Cart Route (Lab 05 Task 8 & 13) */}
+              {/* Cart Route */}
               <Route
                 path="/cart"
                 element={<Cart user={user} />}
+              />
+
+              {/* Checkout Route */}
+              <Route
+                path="/checkout"
+                element={<Checkout user={user} />}
+              />
+
+              {/* My Orders Route */}
+              <Route
+                path="/orders"
+                element={<Orders user={user} />}
+              />
+
+              {/* Order Confirmation / Details Routes */}
+              <Route
+                path="/order-success/:id"
+                element={<OrderConfirmation user={user} />}
+              />
+              <Route
+                path="/orders/:id"
+                element={<OrderConfirmation user={user} />}
               />
 
               {/* Fallback for undefined routes */}
@@ -100,9 +131,12 @@ function App() {
             </Routes>
           </main>
         </div>
+        </WishlistProvider>
       </CartProvider>
     </BrowserRouter>
-  );
+  </ToastProvider>
+</ThemeProvider>
+);
 }
 
 export default App;

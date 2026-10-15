@@ -3,11 +3,8 @@ const Customer = require('../models/customer.model');
 const Product = require('../models/product.model');
 
 /**
- * Task 2: Add Product to Cart
+ * Add Product to Cart
  * POST /cart/:productId
- * - If not in cart: Add with quantity = 1
- * - If already in cart: Increase quantity by 1
- * - Stock limit validation
  */
 const addToCart = async (req, res) => {
   try {
@@ -86,9 +83,8 @@ const addToCart = async (req, res) => {
 };
 
 /**
- * Task 3: Get Current User Cart
+ * Get Current User Cart
  * GET /cart
- * - Populates each cart item's product
  */
 const getCart = async (req, res) => {
   try {
@@ -120,12 +116,8 @@ const getCart = async (req, res) => {
 };
 
 /**
- * Task 4: Update Product Quantity
+ * Update Product Quantity
  * PATCH /cart/:productId
- * Body: { quantity: Number }
- * - Validates quantity >= 1
- * - Validates quantity <= stock
- * - Product must exist in cart
  */
 const updateCartQuantity = async (req, res) => {
   try {
@@ -207,7 +199,7 @@ const updateCartQuantity = async (req, res) => {
 };
 
 /**
- * Task 5: Remove Product from Cart
+ * Remove Product from Cart
  * DELETE /cart/:productId
  */
 const removeFromCart = async (req, res) => {
